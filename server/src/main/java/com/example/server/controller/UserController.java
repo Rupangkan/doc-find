@@ -1,5 +1,7 @@
 package com.example.server.controller;
 
+import com.example.server.dto.JwtRequest;
+import com.example.server.dto.JwtResponse;
 import com.example.server.dto.ResponseDTO;
 import com.example.server.entity.User;
 import com.example.server.repository.UserRepository;
@@ -30,5 +32,10 @@ public class UserController {
         Optional<User> user = userRepository.findByUserName(currUser.getUserName());
         if(user.isPresent()) return ResponseUtils.buildResponse(HttpStatus.CONFLICT, "There is already a user with this username");
         return userService.register(currUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
+        return userService.login(jwtRequest);
     }
 }
