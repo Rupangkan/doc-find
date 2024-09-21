@@ -19,6 +19,6 @@ public class Document {
     private String id;
     @NotBlank(message = "Location name is required")
     private String documentName;
-    private String context;
-    private String username;
+    private String content;
+    private String userName;
 }
