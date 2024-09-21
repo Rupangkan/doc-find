@@ -18,8 +18,9 @@ public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @NotBlank(message = "Location name is required")
+    @NotBlank(message = "Document name is required")
     private String documentName;
+    @Lob
     private String content;
     private String userName;
     @JsonIgnore
