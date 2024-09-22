@@ -34,7 +34,7 @@ public class DocumentController {
         if(user.isEmpty()) return ResponseUtils.buildResponse(HttpStatus.NOT_FOUND, "User Not Found.");
         try {
             List<String> fileNames = files.stream()
-                    .map(file -> documentService.saveDocument(file, userName))
+                    .map(file -> documentService.saveDocument(file, userName, user.get()))
                     .toList();
 
             return ResponseUtils.buildResponse(HttpStatus.OK, "Uploaded file for " + userName + " " + String.join(",", fileNames));

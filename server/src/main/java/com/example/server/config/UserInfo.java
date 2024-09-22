@@ -4,14 +4,13 @@ import com.example.server.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
-import java.util.List;
 
 public class UserInfo implements UserDetails {
-    private final String name;
+    private final String userName;
     private final String password;
 
     public UserInfo(User userInfo) {
-        name = userInfo.getUserName();
+        userName = userInfo.getUserName();
         password = userInfo.getPassword();
     }
 
@@ -27,7 +26,7 @@ public class UserInfo implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return userName;
     }
 
 }
