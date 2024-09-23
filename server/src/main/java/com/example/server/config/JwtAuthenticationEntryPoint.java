@@ -1,6 +1,6 @@
 package com.example.server.config;
 
-import com.example.server.dto.ResponseDTO;
+import com.example.server.dto.PostResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
 
-        ResponseDTO errorResponse = ResponseDTO.builder()
+        PostResponseDTO errorResponse = PostResponseDTO.builder()
                 .message(authException.getMessage())
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .httpStatus(HttpStatus.UNAUTHORIZED)

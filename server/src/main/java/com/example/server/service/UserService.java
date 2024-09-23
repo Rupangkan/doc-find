@@ -3,7 +3,7 @@ package com.example.server.service;
 import com.example.server.config.JwtService;
 import com.example.server.dto.JwtRequest;
 import com.example.server.dto.JwtResponse;
-import com.example.server.dto.ResponseDTO;
+import com.example.server.dto.PostResponseDTO;
 import com.example.server.entity.User;
 import com.example.server.repository.UserRepository;
 import com.example.server.utils.ResponseUtils;
@@ -32,16 +32,16 @@ public class UserService {
     @Autowired
     private JwtService helper;
 
-    public ResponseEntity<ResponseDTO> register(User currUser) {
+    public ResponseEntity<PostResponseDTO> register(User currUser) {
         try {
             User user = User.builder().password(passwordEncoder.encode(currUser.getPassword()))
                     .userName(currUser.getUserName())
                     .documents(currUser.getDocuments())
                     .build();
             userRepository.save(user);
-            return ResponseUtils.buildResponse(HttpStatus.OK, "Created User Successfully!");
+            return ResponseUtils.buildPostResponse(HttpStatus.OK, "Created User Successfully!");
         } catch (Exception e) {
-            return ResponseUtils.buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to Create User!");
+            return ResponseUtils.buildPostResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to Create User!");
         }
     }
 
@@ -57,6 +57,5 @@ public class UserService {
         } else {
             throw new UsernameNotFoundException("Invalid user request !");
         }
-
     }
 }
