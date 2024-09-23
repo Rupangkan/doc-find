@@ -2,7 +2,7 @@ package com.example.server.controller;
 
 import com.example.server.dto.JwtRequest;
 import com.example.server.dto.JwtResponse;
-import com.example.server.dto.ResponseDTO;
+import com.example.server.dto.PostResponseDTO;
 import com.example.server.entity.User;
 import com.example.server.repository.UserRepository;
 import com.example.server.service.UserService;
@@ -28,9 +28,9 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> register(@Valid @RequestBody User currUser) {
+    public ResponseEntity<PostResponseDTO> register(@Valid @RequestBody User currUser) {
         Optional<User> user = userRepository.findByUserName(currUser.getUserName());
-        if(user.isPresent()) return ResponseUtils.buildResponse(HttpStatus.CONFLICT, "There is already a user with this username");
+        if(user.isPresent()) return ResponseUtils.buildPostResponse(HttpStatus.CONFLICT, "There is already a user with this username");
         return userService.register(currUser);
     }
 

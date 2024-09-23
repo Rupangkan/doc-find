@@ -10,8 +10,9 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResponseDTO {
+public class GetResponseDTO<T> {
     String message;
     int code;
     HttpStatus httpStatus;
+    T data;
 }
