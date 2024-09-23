@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.16">
+  <diagram name="Page-1" id="vuTj3vdJpWI8mhF1zzuw">
+    <mxGraphModel dx="1434" dy="784" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-3" value="Application" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="170" y="320" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="py2-jPtV6w_D3Ic_qSzq-4" target="py2-jPtV6w_D3Ic_qSzq-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-4" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="307.5" width="40" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-15" value="Web Server" style="rounded=0;whiteSpace=wrap;html=1;rotation=90;" vertex="1" parent="1">
+          <mxGeometry x="240" y="354" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.228;entryY=0.967;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="py2-jPtV6w_D3Ic_qSzq-3" target="py2-jPtV6w_D3Ic_qSzq-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-20" value="Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="650" y="354" width="140" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.706;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="py2-jPtV6w_D3Ic_qSzq-20" target="py2-jPtV6w_D3Ic_qSzq-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.017;entryY=0.247;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="py2-jPtV6w_D3Ic_qSzq-15" target="py2-jPtV6w_D3Ic_qSzq-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="py2-jPtV6w_D3Ic_qSzq-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.05;entryY=0.64;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="py2-jPtV6w_D3Ic_qSzq-15" target="py2-jPtV6w_D3Ic_qSzq-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
