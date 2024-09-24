@@ -13,6 +13,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class SearchEngineService {
@@ -27,6 +29,16 @@ public class SearchEngineService {
                 SearchPerformanceDTO searchPerformance = measureSearchExecutionTime(searchTerm, userName, algorithm);
                 searchTimes.add(searchPerformance);
             }
+
+            // Multithreaded approach - currently slower (check for reasons)
+//            List<CompletableFuture<SearchPerformanceDTO>> futures = searchAlgorithms.stream()
+//                    .map(algorithm -> CompletableFuture.supplyAsync(() -> measureSearchExecutionTime(searchTerm, userName, algorithm)))
+//                    .toList();
+//
+//            searchTimes = futures.stream()
+//                    .map(CompletableFuture::join)
+//                    .collect(Collectors.toList());
+
             return ResponseUtils.buildGetResponse(HttpStatus.OK, "Search execution times calculated successfully. ", searchTimes);
         } catch (Exception e) {
             return ResponseUtils.buildGetResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
@@ -36,8 +48,8 @@ public class SearchEngineService {
     public SearchPerformanceDTO measureSearchExecutionTime(String searchTerm, String username, SearchAlgorithm algorithm) {
         Instant start = Instant.now();
         List<Document> results = algorithm.execute(searchTerm, username);
-        boolean isFound = results != null && !results.isEmpty();
         Instant end = Instant.now();
+        boolean isFound = results != null && !results.isEmpty();
         return new SearchPerformanceDTO(algorithm.getClass().getSimpleName(), isFound, Duration.between(start, end).toMillis());
     }
 }
