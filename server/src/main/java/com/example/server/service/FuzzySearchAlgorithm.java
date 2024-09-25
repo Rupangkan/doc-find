@@ -1,6 +1,6 @@
 package com.example.server.service;
 
-import com.example.server.entity.Document;
+import com.example.server.dto.SearchResultDTO;
 import com.example.server.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class FuzzySearchAlgorithm implements SearchAlgorithm {
     DocumentRepository documentRepository;
 
     @Override
-    public List<Document> execute(String searchTerm, String username) {
+    public List<SearchResultDTO> execute(String searchTerm, Boolean isCaseSensitive, String username) {
         return null;
     }
 }

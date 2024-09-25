@@ -1,6 +1,6 @@
 package com.example.server.service;
 
-import com.example.server.entity.Document;
+import com.example.server.dto.SearchResultDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class RabinKarpAlgorithm implements SearchAlgorithm {
     @Override
-    public List<Document> execute(String searchTerm, String username) {
+    public List<SearchResultDTO> execute(String searchTerm,Boolean isCaseSensitive,  String username) {
         return null;
     }
 }

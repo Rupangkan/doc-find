@@ -1,5 +1,6 @@
 package com.example.server.service;
 
+import com.example.server.dto.SearchResultDTO;
 import com.example.server.entity.Document;
 import com.example.server.repository.DocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,39 @@ public class BasicSearchAlgorithm implements SearchAlgorithm {
     DocumentRepository documentRepository;
 
     @Override
-    public List<Document> execute(String searchTerm, String username) {
+    public List<SearchResultDTO> execute(String searchTerm, Boolean isCaseSensitive, String username) {
         Optional<List<Document>> documents = documentRepository.findAllByUserName(username);
-        List<Document> matchingDocuments = new ArrayList<>();
+        List<SearchResultDTO> matchingDocuments = new ArrayList<>();
         if(documents.isPresent()) {
             for(Document document: documents.get()) {
-                String content = document.getContent();
-                // contains is a linear search
-                if(content.contains(searchTerm)) matchingDocuments.add(document);
+                SearchResultDTO resultDTO = getSearchResultDTO(searchTerm, isCaseSensitive, document);
+
+                matchingDocuments.add(resultDTO);
             }
         }
+
         return matchingDocuments;
+    }
+
+    private static SearchResultDTO getSearchResultDTO(String searchTerm, Boolean isCaseSensitive, Document document) {
+        String content = document.getContent();
+        SearchResultDTO resultDTO = new SearchResultDTO(document.getDocumentName(), new ArrayList<>());
+        int contentLength = content.length();
+
+        for(int startIndex = 0; startIndex <= contentLength - searchTerm.length(); startIndex++) {
+            int currSearchSize = startIndex + searchTerm.length();
+
+            for(int endIndex = startIndex+1; endIndex < currSearchSize; endIndex++) {
+                String substring = content.substring(startIndex, endIndex + 1);
+
+                boolean isMatch = (isCaseSensitive != null && isCaseSensitive)
+                        ? substring.equals(searchTerm)
+                        : substring.equalsIgnoreCase(searchTerm);
+
+                if(isMatch) resultDTO.addOccurrences(startIndex, endIndex);
+            }
+        }
+
+        return resultDTO;
     }
 }

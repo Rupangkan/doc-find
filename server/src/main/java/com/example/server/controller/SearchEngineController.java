@@ -28,12 +28,12 @@ public class SearchEngineController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/search-performance")
-    public ResponseEntity<GetResponseDTO<List<SearchPerformanceDTO>>> getSearchPerformance(@RequestParam("search-term") String searchTerm, Authentication authentication) {
+    @GetMapping("/get-all-occurrences")
+    public ResponseEntity<GetResponseDTO<List<SearchPerformanceDTO>>> getAllOccurrences(@RequestParam("search-term") String searchTerm, @RequestParam("case-sensitive") boolean isCaseSensitive, Authentication authentication) {
         String userName = authentication.getName();
         Optional<User> user = userRepository.findByUserName(userName);
         if(user.isEmpty()) return ResponseUtils.buildGetResponse(HttpStatus.NOT_FOUND, "User Not Found.", null);
-        return searchEngineService.getPerformanceData(searchTerm, userName);
+        return searchEngineService.getAllOccurrences(searchTerm, isCaseSensitive, userName);
     }
 
 }

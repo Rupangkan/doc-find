@@ -1,8 +1,9 @@
 package com.example.server.service;
 
-import com.example.server.entity.Document;
+import com.example.server.dto.SearchResultDTO;
+
 import java.util.List;
 
 public interface SearchAlgorithm {
-    List<Document> execute(String searchTerm, String username);
+    List<SearchResultDTO> execute(String searchTerm, Boolean isCaseSensitive, String username);
 }
