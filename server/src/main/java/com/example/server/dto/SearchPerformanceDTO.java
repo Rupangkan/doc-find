@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchPerformanceDTO {
     private String algorithmName;
+    private String searchTerm;
     private boolean isFound;
     private long executionTime;
     List<SearchResultDTO> searchResultDTO;

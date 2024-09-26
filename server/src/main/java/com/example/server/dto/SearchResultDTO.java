@@ -12,9 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchResultDTO {
     private String documentName;
-    private List<int[]> occurrences = new ArrayList<>();
+    private List<Integer> occurrences = new ArrayList<>();
 
-    public void addOccurrences(int startInd, int endInd) {
-        occurrences.add(new int[] { startInd, endInd });
+    public void addOccurrences(int startInd) {
+        occurrences.add(startInd);
     }
 }

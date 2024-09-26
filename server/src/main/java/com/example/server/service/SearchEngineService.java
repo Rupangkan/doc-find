@@ -51,6 +51,7 @@ public class SearchEngineService {
         boolean isFound = results != null && !results.isEmpty();
         return new SearchPerformanceDTO(
                 algorithm.getClass().getSimpleName(),
+                searchTerm,
                 isFound,
                 Duration.between(start, end).toMillis(),
                 results

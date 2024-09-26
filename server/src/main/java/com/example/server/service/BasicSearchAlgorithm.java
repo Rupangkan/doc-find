@@ -46,7 +46,7 @@ public class BasicSearchAlgorithm implements SearchAlgorithm {
                         ? substring.equals(searchTerm)
                         : substring.equalsIgnoreCase(searchTerm);
 
-                if(isMatch) resultDTO.addOccurrences(startIndex, endIndex);
+                if(isMatch) resultDTO.addOccurrences(startIndex);
             }
         }
 
