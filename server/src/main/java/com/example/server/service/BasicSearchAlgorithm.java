@@ -16,22 +16,7 @@ public class BasicSearchAlgorithm implements SearchAlgorithm {
     @Autowired
     DocumentRepository documentRepository;
 
-    @Override
-    public List<SearchResultDTO> execute(String searchTerm, Boolean isCaseSensitive, String username) {
-        Optional<List<Document>> documents = documentRepository.findAllByUserName(username);
-        List<SearchResultDTO> matchingDocuments = new ArrayList<>();
-        if(documents.isPresent()) {
-            for(Document document: documents.get()) {
-                SearchResultDTO resultDTO = getSearchResultDTO(searchTerm, isCaseSensitive, document);
-
-                matchingDocuments.add(resultDTO);
-            }
-        }
-
-        return matchingDocuments;
-    }
-
-    private static SearchResultDTO getSearchResultDTO(String searchTerm, Boolean isCaseSensitive, Document document) {
+    private static SearchResultDTO getBasicSearchResultDTO(String searchTerm, Boolean isCaseSensitive, Document document) {
         String content = document.getContent();
         SearchResultDTO resultDTO = new SearchResultDTO(document.getDocumentName(), new ArrayList<>());
         int contentLength = content.length();
@@ -51,5 +36,20 @@ public class BasicSearchAlgorithm implements SearchAlgorithm {
         }
 
         return resultDTO;
+    }
+
+    @Override
+    public List<SearchResultDTO> execute(String searchTerm, Boolean isCaseSensitive, String username) {
+        Optional<List<Document>> documents = documentRepository.findAllByUserName(username);
+        List<SearchResultDTO> matchingDocuments = new ArrayList<>();
+        if(documents.isPresent()) {
+            for(Document document: documents.get()) {
+                SearchResultDTO resultDTO = getBasicSearchResultDTO(searchTerm, isCaseSensitive, document);
+
+                matchingDocuments.add(resultDTO);
+            }
+        }
+
+        return matchingDocuments;
     }
 }
