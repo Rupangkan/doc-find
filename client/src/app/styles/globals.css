@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.background-image {
+/* styles/globals.css */
+html,
+body {
+	@apply h-full w-full bg-cover bg-center bg-no-repeat; /* Tailwind utilities */
+	background-image: url("../public/background.jpg"); /* Background image URL */
+	margin: 0;
+}
+
+/* .background-image {
 	background-image: url("https://learnloner.com/wp-content/uploads/2024/01/DSA.png.webp");
 	background-size: cover;
 	background-position: center;
@@ -37,4 +45,4 @@ body {
 	.text-balance {
 		text-wrap: balance;
 	}
-}
+} */
