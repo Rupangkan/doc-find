@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.background-image {
+	background-image: url("https://learnloner.com/wp-content/uploads/2024/01/DSA.png.webp");
+	background-size: cover;
+	background-position: center;
+	height: 100vh;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	justify-content: center;
+	align-items: center;
+	color: white;
+}
+
+:root {
+	--background: #000000;
+	--foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: #0a0a0a;
+		--foreground: #ededed;
+	}
+}
+
+body {
+	color: var(--foreground);
+	background: var(--background);
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+	.text-balance {
+		text-wrap: balance;
+	}
+}
