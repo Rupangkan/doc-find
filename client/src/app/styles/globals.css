@@ -3,11 +3,43 @@
 @tailwind utilities;
 
 /* styles/globals.css */
+/* html,
+body {
+	@apply h-full w-full bg-cover bg-center bg-no-repeat;
+	background-image: url("../public/background.jpg");
+	filter: blur(8px);
+	margin: 0;
+} */
+
 html,
 body {
-	@apply h-full w-full bg-cover bg-center bg-no-repeat; /* Tailwind utilities */
-	background-image: url("../public/background.jpg"); /* Background image URL */
+	@apply h-full w-full bg-no-repeat;
 	margin: 0;
+	position: relative;
+}
+
+html::before,
+body::before {
+	content: "";
+	@apply h-full w-full absolute top-0 left-0 bg-cover bg-center;
+	background-image: url("../public/background.jpg");
+	filter: blur(5px); /* Blur the background image */
+	z-index: -1; /* Place the blurred background behind the content */
+}
+
+.blur-xsm {
+	--tw-blur: blur(3px);
+	filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
+		var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert)
+		var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.-rotate-20 {
+	--tw-rotate: -20deg;
+	transform: translate(var(--tw-translate-x), var(--tw-translate-y))
+		rotate(var(--tw-rotate)) skewX(var(--tw-skew-x))
+		skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
+		scaleY(var(--tw-scale-y));
 }
 
 /* .background-image {

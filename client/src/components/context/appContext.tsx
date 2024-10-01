@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useReducer, createContext, useEffect, ReactNode } from "react";
 import { useRouter } from "next/router";
 
@@ -29,13 +31,15 @@ const Context = createContext<
 
 // Root reducer
 const rootReducer = (state: State, action: Action): State => {
-	switch (action.type) {
-		case "LOGIN":
-			return { ...state, user: action.payload };
-		case "LOGOUT":
-			return { ...state, user: null };
-		default:
-			return state;
+	if (typeof window !== "undefined") {
+		switch (action.type) {
+			case "LOGIN":
+				return { ...state, user: action.payload };
+			case "LOGOUT":
+				return { ...state, user: null };
+			default:
+				return state;
+		}
 	}
 };
 
@@ -47,43 +51,46 @@ const Provider: React.FC<{ children: ReactNode }> = ({ children }) => {
 	const router = useRouter();
 
 	useEffect(() => {
-		const user = window.localStorage.getItem("user");
-		if (user) {
-			dispatch({ type: "LOGIN", payload: JSON.parse(user) });
+		if (typeof window !== "undefined") {
+			const user = window.localStorage.getItem("user");
+			if (user) {
+				dispatch({ type: "LOGIN", payload: JSON.parse(user) });
+			}
 		}
 	}, []);
 
 	useEffect(() => {
-		const handleResponse = async (response: Response) => {
-			if (response.status === 401) {
-				console.log("/401 error > logout");
-				dispatch({ type: "LOGOUT" });
-				window.localStorage.removeItem("user");
-				router.push("/login");
-			}
-			return response;
-		};
+		if (typeof window !== "undefined") {
+			const handleResponse = async (response: Response) => {
+				if (response.status === 401) {
+					console.log("/401 error > logout");
+					dispatch({ type: "LOGOUT" });
+					window.localStorage.removeItem("user");
+					router.push("/login");
+				}
+				return response;
+			};
+			const getCsrfToken = async () => {
+				const res = await fetch("/api/csrf-token");
+				const data = await res.json();
+				if (res.ok) {
+					// Set CSRF token in fetch headers
+					fetch.defaults.headers["X-CSRF-TOKEN"] =
+						data.getCsrfToken;
+				}
+			};
 
-		const getCsrfToken = async () => {
-			const res = await fetch("/api/csrf-token");
-			const data = await res.json();
-			if (res.ok) {
-				// Set CSRF token in fetch headers
-				fetch.defaults.headers["X-CSRF-TOKEN"] =
-					data.getCsrfToken;
-			}
-		};
+			getCsrfToken();
 
-		getCsrfToken();
-
-		// Example of setting up a custom fetch function to handle logout
-		const customFetch = async (
-			input: RequestInfo,
-			init?: RequestInit
-		) => {
-			const response = await fetch(input, init);
-			return handleResponse(response);
-		};
+			// Example of setting up a custom fetch function to handle logout
+			const customFetch = async (
+				input: RequestInfo,
+				init?: RequestInit
+			) => {
+				const response = await fetch(input, init);
+				return handleResponse(response);
+			};
+		}
 
 		// Replace all fetch calls with customFetch in your app
 	}, [router]);
