@@ -43,7 +43,7 @@ export default function SignIn() {
 							</h3>
 							<button
 								onClick={switchLogin}
-								className="bg-blue-800 hover:bg-blue-700 text-white px-8 py-3 rounded-full shadow-lg hover:shadow-sm"
+								className="bg-blue-800 hover:bg-blue-700 text-white px-8 py-3 rounded-md shadow-lg hover:shadow-sm"
 							>
 								Login
 							</button>
@@ -61,18 +61,21 @@ export default function SignIn() {
 									type="text"
 									name="user-name"
 									placeholder="User Name"
+									autoComplete="off"
 									className="w-full px-4 py-3 border-2 border-gray-300 rounded-md bg-transparent backdrop-blur-md focus:border-blue-500 focus:ring-2 focus:ring-blue-600 transition duration-300 placeholder-gray-400"
 									// className="w-full px-4 py-3 border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring-2 focus:ring-blue-600 transition duration-300 placeholder-gray-400"
 								/>
 								<input
 									type="password"
 									name="user-pass"
+									autoComplete="off"
 									placeholder="Password"
 									className="w-full px-4 py-3 border-2 border-gray-300 rounded-md bg-transparent backdrop-blur-md focus:border-blue-500 focus:ring-2 focus:ring-blue-600 transition duration-300 placeholder-gray-400"
 								/>
 								<input
 									type="password"
-									name="user-cpass"
+									name="user-pass"
+									autoComplete="off"
 									placeholder="Confirm Password"
 									className="w-full px-4 py-3 border-2 border-gray-300 rounded-md bg-transparent backdrop-blur-md focus:border-blue-500 focus:ring-2 focus:ring-blue-600 transition duration-300 placeholder-gray-400"
 								/>
@@ -90,12 +93,14 @@ export default function SignIn() {
 								<input
 									type="text"
 									name="user-name"
+									autoComplete="off"
 									placeholder="User Name"
 									className="w-full px-4 py-3 border-2 border-gray-300 rounded-md bg-transparent backdrop-blur-md focus:border-blue-500 focus:ring-2 focus:ring-blue-600 transition duration-300 placeholder-gray-400"
 								/>
 								<input
 									type="password"
 									name="user-pass"
+									autoComplete="off"
 									placeholder="Password"
 									className="w-full px-4 py-3 border-2 border-gray-300 rounded-md bg-transparent backdrop-blur-md focus:border-blue-500 focus:ring-2 focus:ring-blue-600 transition duration-300 placeholder-gray-400"
 								/>
