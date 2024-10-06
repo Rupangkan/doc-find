@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
 
 				<div>
 					<Link href="/signin">
-						<button className="text-white text-lg py-2 px-6 rounded-full bg-blue-800 hover:bg-blue-700 transition duration-300">
+						<button className="text-white text-lg py-2 px-6 rounded-full bg-violet-800 hover:bg-blue-700 transition duration-300">
 							Sign up
 						</button>
 					</Link>

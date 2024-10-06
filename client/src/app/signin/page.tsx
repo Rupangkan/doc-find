@@ -28,7 +28,7 @@ export default function SignIn() {
 							</h3>
 							<button
 								onClick={switchSignup}
-								className="bg-blue-800 hover:bg-blue-700 text-white px-8 py-3 rounded-full shadow-lg hover:shadow-sm"
+								className="bg-violet-800 hover:bg-blue-700 text-white px-8 py-3 rounded-full shadow-lg hover:shadow-sm"
 							>
 								Signup
 							</button>
@@ -43,7 +43,7 @@ export default function SignIn() {
 							</h3>
 							<button
 								onClick={switchLogin}
-								className="bg-blue-800 hover:bg-blue-700 text-white px-8 py-3 rounded-md shadow-lg hover:shadow-sm"
+								className="bg-violet-800 hover:bg-blue-700 text-white px-8 py-3 rounded-md shadow-lg hover:shadow-sm"
 							>
 								Login
 							</button>
@@ -81,7 +81,7 @@ export default function SignIn() {
 								/>
 								<button
 									type="button"
-									className="w-full bg-blue-800 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
+									className="w-full bg-violet-800 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
 								>
 									Signup
 								</button>
@@ -106,7 +106,7 @@ export default function SignIn() {
 								/>
 								<button
 									type="button"
-									className="w-full bg-blue-800 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
+									className="w-full bg-violet-800 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
 								>
 									Login
 								</button>
