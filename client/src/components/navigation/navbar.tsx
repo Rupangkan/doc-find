@@ -22,17 +22,11 @@ const Navbar: React.FC = () => {
 					>
 						Product
 					</Link>
-					{/* <Link
-						href="/pricing"
-						className="hover:text-indigo-300 text-xl font-semibold"
-					>
-						Pricing
-					</Link> */}
 				</div>
 
 				<div>
-					<Link href="/signup">
-						<button className="text-white text-lg py-2 px-6 outline rounded-full hover:bg-indigo-300 transition duration-300">
+					<Link href="/signin">
+						<button className="text-white text-lg py-2 px-6 rounded-full bg-violet-800 hover:bg-blue-700 transition duration-300">
 							Sign up
 						</button>
 					</Link>

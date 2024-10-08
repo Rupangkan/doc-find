@@ -11,20 +11,33 @@ body {
 	margin: 0;
 } */
 
-html,
+/* html,
 body {
 	@apply h-full w-full bg-no-repeat;
 	margin: 0;
 	position: relative;
+} */
+
+html,
+body {
+	height: 100%; /* Ensure that the html and body take up full height */
+	margin: 0; /* Remove any default margin that can cause white space */
+	overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 html::before,
 body::before {
 	content: "";
-	@apply h-full w-full absolute top-0 left-0 bg-cover bg-center;
+	position: absolute; /* Ensure it's positioned absolutely */
+	top: 0;
+	left: 0;
+	height: 100%; /* Set to 100% of the document height */
+	width: 100%; /* Set to 100% of the document width */
 	background-image: url("../public/background.jpg");
-	filter: blur(5px); /* Blur the background image */
-	z-index: -1; /* Place the blurred background behind the content */
+	background-size: cover; /* Make sure the background covers the entire container */
+	background-repeat: no-repeat; /* Prevent repeating the image */
+	background-position: center; /* Center the background image */
+	z-index: -1; /* Keep the background behind the content */
 }
 
 .blur-xsm {
@@ -40,6 +53,22 @@ body::before {
 		rotate(var(--tw-rotate)) skewX(var(--tw-skew-x))
 		skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
 		scaleY(var(--tw-scale-y));
+}
+
+@layer components {
+	.border-image-gradient {
+		border-image: linear-gradient(45deg, #c3c7ee, #4301f7) 1;
+	}
+}
+
+.group:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 10px 20px rgba(165, 211, 223, 0.726),
+		0 10px 40px rgba(39, 1, 252, 0.4);
+}
+
+.group {
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* .background-image {

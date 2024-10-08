@@ -16,9 +16,10 @@ export default function BlurredText() {
 	);
 
 	return (
-		<div className="relative flex items-center justify-center">
-			<div className="transform -rotate-20">
-				<div className="relative flex flex-col items-center justify-center space-y-1 h-full w-full backdrop-filter backdrop-blur-xl bg-opacity-50 px-8 py-6 border-2 rounded-3xl">
+		<div className="w-full lg:w-1/2 lg:pl-8 mt-8 lg:mt-12">
+			<div className="relative flex items-center justify-center transform -rotate-12">
+				{/* <div className="transform -rotate-12"> */}
+				<div className="relative flex flex-col items-center justify-center space-y-1 h-full backdrop-filter backdrop-blur-xl bg-opacity-50 px-8 py-16 group border-2 border-transparent border-image-gradient transition-all duration-300 ease-in-out">
 					<div className="relative flex items-center space-x-2">
 						<TextBlock>
 							Hi guys, nice to meet you.
@@ -150,6 +151,7 @@ export default function BlurredText() {
 						interact with knowledge.
 					</TextBlock>
 				</div>
+				{/* </div> */}
 			</div>
 		</div>
 	);
