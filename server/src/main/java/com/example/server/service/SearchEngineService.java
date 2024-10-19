@@ -20,6 +20,71 @@ public class SearchEngineService {
     @Autowired
     List<SearchAlgorithm> searchAlgorithms;
 
+    @Autowired
+    BasicSearchAlgorithm basicSearchAlgorithm;
+
+    @Autowired
+    BoyerMooreAlgorithm boyerMooreAlgorithm;
+
+    @Autowired
+    FuzzySearchAlgorithm fuzzySearchAlgorithm;
+
+    @Autowired
+    KnuthMorrisPrattAlgorithm knuthMorrisPrattAlgorithm;
+
+    @Autowired
+    RabinKarpAlgorithm rabinKarpAlgorithm;
+
+    public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getLinearSearch(String searchTerm, boolean isCaseSensitive, String userName) {
+        SearchPerformanceDTO searchPerformanceDTO;
+        try {
+            searchPerformanceDTO = measureSearchExecutionTime(searchTerm, isCaseSensitive, userName, basicSearchAlgorithm);
+            return ResponseUtils.buildGetResponse(HttpStatus.OK, "Search execution time calculated successfully. ", searchPerformanceDTO);
+        } catch (Exception e) {
+            return ResponseUtils.buildGetResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getBoyerMooreSearch(String searchTerm, boolean isCaseSensitive, String userName) {
+        SearchPerformanceDTO searchPerformanceDTO;
+        try {
+            searchPerformanceDTO = measureSearchExecutionTime(searchTerm, isCaseSensitive, userName, boyerMooreAlgorithm);
+            return ResponseUtils.buildGetResponse(HttpStatus.OK, "Search execution time calculated successfully. ", searchPerformanceDTO);
+        } catch (Exception e) {
+            return ResponseUtils.buildGetResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getFuzzySearch(String searchTerm, boolean isCaseSensitive, String userName) {
+        SearchPerformanceDTO searchPerformanceDTO;
+        try {
+            searchPerformanceDTO = measureSearchExecutionTime(searchTerm, isCaseSensitive, userName, fuzzySearchAlgorithm);
+            return ResponseUtils.buildGetResponse(HttpStatus.OK, "Search execution time calculated successfully. ", searchPerformanceDTO);
+        } catch (Exception e) {
+            return ResponseUtils.buildGetResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getKmpSearch(String searchTerm, boolean isCaseSensitive, String userName) {
+        SearchPerformanceDTO searchPerformanceDTO;
+        try {
+            searchPerformanceDTO = measureSearchExecutionTime(searchTerm, isCaseSensitive, userName, knuthMorrisPrattAlgorithm);
+            return ResponseUtils.buildGetResponse(HttpStatus.OK, "Search execution time calculated successfully. ", searchPerformanceDTO);
+        } catch (Exception e) {
+            return ResponseUtils.buildGetResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
+    public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getRabinKarpSearch(String searchTerm, boolean isCaseSensitive, String userName) {
+        SearchPerformanceDTO searchPerformanceDTO;
+        try {
+            searchPerformanceDTO = measureSearchExecutionTime(searchTerm, isCaseSensitive, userName, rabinKarpAlgorithm);
+            return ResponseUtils.buildGetResponse(HttpStatus.OK, "Search execution time calculated successfully. ", searchPerformanceDTO);
+        } catch (Exception e) {
+            return ResponseUtils.buildGetResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), null);
+        }
+    }
+
     public ResponseEntity<GetResponseDTO<List<SearchPerformanceDTO>>> getAllOccurrences(String searchTerm, boolean isCaseSensitive, String userName) {
         List<SearchPerformanceDTO> searchTimes = new ArrayList<>();
         try {
