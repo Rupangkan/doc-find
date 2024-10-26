@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.dto.GetResponseDTO;
+import com.example.server.dto.PatternMatchDTO;
 import com.example.server.dto.SearchPerformanceDTO;
 import com.example.server.entity.User;
 import com.example.server.repository.UserRepository;
@@ -52,14 +53,6 @@ public class SearchEngineController {
         return searchEngineService.getBoyerMooreSearch(searchTerm, isCaseSensitive, userName);
     }
 
-    @GetMapping("/get-fuzzy-search")
-    public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getFuzzySearch(@RequestParam("search-term") String searchTerm, @RequestParam("case-sensitive") boolean isCaseSensitive, Authentication authentication) {
-        String userName = authentication.getName();
-        Optional<User> user = userRepository.findByUserName(userName);
-        if(user.isEmpty()) return ResponseUtils.buildGetResponse(HttpStatus.NOT_FOUND, "User Not Found.", null);
-        return searchEngineService.getFuzzySearch(searchTerm, isCaseSensitive, userName);
-    }
-
     @GetMapping("/get-kmp-search")
     public ResponseEntity<GetResponseDTO<SearchPerformanceDTO>> getKmpSearch(@RequestParam("search-term") String searchTerm, @RequestParam("case-sensitive") boolean isCaseSensitive, Authentication authentication) {
         String userName = authentication.getName();
@@ -74,5 +67,13 @@ public class SearchEngineController {
         Optional<User> user = userRepository.findByUserName(userName);
         if(user.isEmpty()) return ResponseUtils.buildGetResponse(HttpStatus.NOT_FOUND, "User Not Found.", null);
         return searchEngineService.getRabinKarpSearch(searchTerm, isCaseSensitive, userName);
+    }
+
+    @GetMapping("/get-fuzzy-search")
+    public ResponseEntity<GetResponseDTO<List<PatternMatchDTO>>> getFuzzySearch(@RequestParam("search-term") String searchTerm, Authentication authentication) {
+        String userName = authentication.getName();
+        Optional<User> user = userRepository.findByUserName(userName);
+        if(user.isEmpty()) return ResponseUtils.buildGetResponse(HttpStatus.NOT_FOUND, "User Not Found.", null);
+        return searchEngineService.getFuzzySearch(searchTerm, userName);
     }
 }
