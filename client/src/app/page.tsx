@@ -12,7 +12,7 @@ export default function Home() {
         <div>
             <Navbar />
             <DocumentSearchFlow />
-            <FileUpload />
+            {/* <FileUpload /> */}
             {/* <SignIn /> */}
             <div className="flex flex-col lg:flex-row lg:justify-between w-full">
                 {/* <SignIn /> */}
