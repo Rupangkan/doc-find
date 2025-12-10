@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import SearchCard from "../../components/cards/search";
 import DocumentUploadPanel from "../../components/DocumentUploadPanel";
+import SearchControls from "../../components/SearchControls";
+import { SearchPerformanceDTO } from "../../lib/api/types";
 
 interface UploadedDocument {
     name: string;
@@ -13,6 +14,9 @@ interface UploadedDocument {
 export default function DocumentSearchFlow() {
     const [currentStep, setCurrentStep] = useState(1);
     const [uploadedDocuments, setUploadedDocuments] = useState<UploadedDocument[]>(
+        []
+    );
+    const [searchResults, setSearchResults] = useState<SearchPerformanceDTO[]>(
         []
     );
 
@@ -31,6 +35,11 @@ export default function DocumentSearchFlow() {
         if (documents.length > 0) {
             setCurrentStep(2);
         }
+    };
+
+    const handleSearchComplete = (results: SearchPerformanceDTO[]) => {
+        setSearchResults(results);
+        setCurrentStep(3);
     };
 
     return (
@@ -115,18 +124,75 @@ export default function DocumentSearchFlow() {
                                 ? `${uploadedDocuments.length} document${uploadedDocuments.length !== 1 ? "s" : ""} uploaded`
                                 : "No documents uploaded yet"}
                         </p>
-                        <SearchCard />
+                        <SearchControls
+                            documentsCount={uploadedDocuments.length}
+                            onSearchComplete={handleSearchComplete}
+                        />
                     </div>
                 </div>
             )}
 
             {currentStep === 3 && (
                 <div className="w-full max-w-xl mx-auto px-4">
-                    <div className="p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700 text-center">
+                    <div className="p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700">
                         <h2 className="text-2xl text-white font-semibold mb-4">
-                            Step 3: Review Results
+                            Search Results
                         </h2>
-                        <p className="text-gray-300">Results content coming soon...</p>
+                        {searchResults.length > 0 ? (
+                            <div className="space-y-4">
+                                {searchResults.map((result, index) => (
+                                    <div
+                                        key={index}
+                                        className="p-4 bg-gray-800 bg-opacity-50 rounded-lg border border-gray-700"
+                                    >
+                                        <div className="flex justify-between items-start mb-2">
+                                            <h3 className="text-lg font-semibold text-violet-400">
+                                                {result.algorithmName}
+                                            </h3>
+                                            <span
+                                                className={`text-sm font-medium ${
+                                                    result.isFound
+                                                        ? "text-green-400"
+                                                        : "text-red-400"
+                                                }`}
+                                            >
+                                                {result.isFound ? "Found" : "Not Found"}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-300 text-sm mb-2">
+                                            Search Term: &quot;{result.searchTerm}&quot;
+                                        </p>
+                                        <p className="text-gray-400 text-sm mb-3">
+                                            Execution Time: {result.executionTime.toFixed(4)} ms
+                                        </p>
+                                        {result.searchResultDTO.length > 0 && (
+                                            <div className="space-y-2">
+                                                {result.searchResultDTO.map((doc, docIndex) => (
+                                                    <div
+                                                        key={docIndex}
+                                                        className="p-3 bg-gray-900 bg-opacity-50 rounded"
+                                                    >
+                                                        <p className="text-white text-sm font-medium">
+                                                            {doc.documentName}
+                                                        </p>
+                                                        <p className="text-gray-400 text-xs mt-1">
+                                                            {doc.occurrences.length} occurrence
+                                                            {doc.occurrences.length !== 1 ? "s" : ""} at
+                                                            position{doc.occurrences.length !== 1 ? "s" : ""}:{" "}
+                                                            {doc.occurrences.join(", ")}
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-300 text-center">
+                                No search results available
+                            </p>
+                        )}
                     </div>
                 </div>
             )}
