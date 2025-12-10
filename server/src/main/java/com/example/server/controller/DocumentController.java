@@ -10,7 +10,6 @@ import com.example.server.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -53,16 +52,16 @@ public class DocumentController {
     }
 
     @PostMapping("/delete-documents")
-    public ResponseEntity<PostResponseDTO> deleteDocuments(Authentication authentication) {
-        String userName = authentication.getName();
+    public ResponseEntity<PostResponseDTO> deleteDocuments() {
+        String userName = "default-user";
         Optional<User> user = userRepository.findByUserName(userName);
         if(user.isEmpty()) return ResponseUtils.buildPostResponse(HttpStatus.NOT_FOUND, "User Not Found.");
         return documentService.deleteDocument(userName);
     }
 
     @GetMapping("/get-documents")
-    public ResponseEntity<GetResponseDTO<List<Document>>> getDocuments(Authentication authentication) {
-        String userName = authentication.getName();
+    public ResponseEntity<GetResponseDTO<List<Document>>> getDocuments() {
+        String userName = "default-user";
         Optional<User> user = userRepository.findByUserName(userName);
         if(user.isEmpty()) return ResponseUtils.buildGetResponse(HttpStatus.NOT_FOUND, "User Not Found.", null);
         return documentService.getDocuments(userName);

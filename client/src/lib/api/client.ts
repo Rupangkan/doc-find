@@ -87,7 +87,6 @@ export async function apiFetch<T>(
 
 export async function uploadDocuments(
   files: File[],
-  token?: string,
   signal?: AbortSignal
 ): Promise<PostResponseDTO> {
   const formData = new FormData();
@@ -103,14 +102,12 @@ export async function uploadDocuments(
 }
 
 export async function fetchDocuments(
-  token?: string,
   signal?: AbortSignal
 ): Promise<Document[]> {
   const response = await apiFetch<GetResponseDTO<Document[]>>(
     "/auth/get-documents",
     {
       method: "GET",
-      token,
       signal,
     }
   );
@@ -118,12 +115,10 @@ export async function fetchDocuments(
 }
 
 export async function deleteDocuments(
-  token?: string,
   signal?: AbortSignal
 ): Promise<PostResponseDTO> {
   return apiFetch<PostResponseDTO>("/auth/delete-documents", {
     method: "POST",
-    token,
     signal,
   });
 }
@@ -131,7 +126,6 @@ export async function deleteDocuments(
 export async function runSearch(
   searchTerm: string,
   caseSensitive: boolean,
-  token?: string,
   signal?: AbortSignal
 ): Promise<SearchPerformanceDTO[]> {
   const params = new URLSearchParams({
@@ -143,7 +137,6 @@ export async function runSearch(
     `/auth/get-all-occurrences?${params.toString()}`,
     {
       method: "GET",
-      token,
       signal,
     }
   );
