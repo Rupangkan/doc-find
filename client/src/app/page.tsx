@@ -1,25 +1,14 @@
 import React from "react";
 import Navbar from "../components/navigation/navbar";
-import BlurredText from "../components/cards/blurredtext";
-import IntroCard from "../components/cards/introcard";
-import SignIn from "./signin/page";
 import DocumentSearchFlow from "./results/results";
-// import { Provider } from "../components/context/appContext";
-import FileUpload from "./results/results";
 
 export default function Home() {
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <Navbar />
-            <DocumentSearchFlow />
-            <FileUpload />
-            {/* <SignIn /> */}
-            <div className="flex flex-col lg:flex-row lg:justify-between w-full">
-                {/* <SignIn /> */}
-                {/* <IntroCard /> */}
-                {/* <BlurredText /> */}
-                {/* <SignIn /> */}
-            </div>
+            <main className="flex-grow container mx-auto px-4 pb-8">
+                <DocumentSearchFlow />
+            </main>
         </div>
     );
 }
