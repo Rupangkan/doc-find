@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { uploadDocuments } from "../lib/api";
+import { useAuth } from "./context/appContext";
 
 const ALLOWED_EXTENSIONS = ["pdf", "txt", "doc", "docx"];
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -26,6 +27,7 @@ interface DocumentUploadPanelProps {
 export default function DocumentUploadPanel({
     onUploadComplete,
 }: DocumentUploadPanelProps) {
+    const { token } = useAuth();
     const [filesWithProgress, setFilesWithProgress] = useState<FileWithProgress[]>(
         []
     );
@@ -120,16 +122,7 @@ export default function DocumentUploadPanel({
         );
 
         try {
-            await uploadDocuments(pendingFiles, (fileIndex, progress) => {
-                // Update progress for all uploading files
-                setFilesWithProgress((prevFiles) =>
-                    prevFiles.map((f) =>
-                        f.status === "uploading"
-                            ? { ...f, progress: progress.percentage }
-                            : f
-                    )
-                );
-            });
+            await uploadDocuments(pendingFiles, token ?? undefined);
 
             // Mark all uploading files as success
             const newUploadedDocs: UploadedDocument[] = [];
