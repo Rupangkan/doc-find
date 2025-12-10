@@ -1,105 +1,93 @@
 "use client";
 
-import React, { useReducer, createContext, useEffect, ReactNode } from "react";
-import { useRouter } from "next/router";
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
-// Define types for the state and actions
 interface User {
-	// Define user properties based on your application
-	id: string;
-	name: string;
+  id: string;
+  userName: string;
 }
 
-interface State {
-	user: User | null;
+interface AuthState {
+  user: User | null;
+  token: string | null;
 }
 
-interface Action {
-	type: "LOGIN" | "LOGOUT";
-	payload?: User | null;
+interface AuthContextType {
+  user: User | null;
+  token: string | null;
+  login: (user: User, token: string) => void;
+  logout: () => void;
+  isAuthenticated: boolean;
 }
 
-// Initial state
-const initialState: State = {
-	user: null,
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    token: null,
+  });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = window.localStorage.getItem("token");
+      const storedUser = window.localStorage.getItem("user");
+      
+      if (storedToken && storedUser) {
+        try {
+          setAuthState({
+            token: storedToken,
+            user: JSON.parse(storedUser),
+          });
+        } catch (error) {
+          console.error("Failed to parse stored user data:", error);
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("user");
+        }
+      }
+    }
+  }, []);
+
+  const login = (user: User, token: string) => {
+    setAuthState({ user, token });
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("token", token);
+      window.localStorage.setItem("user", JSON.stringify(user));
+    }
+  };
+
+  const logout = () => {
+    setAuthState({ user: null, token: null });
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("token");
+      window.localStorage.removeItem("user");
+    }
+    router.push("/login");
+  };
+
+  const isAuthenticated = authState.token !== null && authState.user !== null;
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user: authState.user,
+        token: authState.token,
+        login,
+        logout,
+        isAuthenticated,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-// Create context
-const Context = createContext<
-	{ state: State; dispatch: React.Dispatch<Action> } | undefined
->(undefined);
-
-// Root reducer
-const rootReducer = (state: State, action: Action): State => {
-	if (typeof window !== "undefined") {
-		switch (action.type) {
-			case "LOGIN":
-				return { ...state, user: action.payload };
-			case "LOGOUT":
-				return { ...state, user: null };
-			default:
-				return state;
-		}
-	}
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
-
-// Context provider
-const Provider: React.FC<{ children: ReactNode }> = ({ children }) => {
-	const [state, dispatch] = useReducer(rootReducer, initialState);
-
-	// Router
-	const router = useRouter();
-
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			const user = window.localStorage.getItem("user");
-			if (user) {
-				dispatch({ type: "LOGIN", payload: JSON.parse(user) });
-			}
-		}
-	}, []);
-
-	useEffect(() => {
-		if (typeof window !== "undefined") {
-			const handleResponse = async (response: Response) => {
-				if (response.status === 401) {
-					console.log("/401 error > logout");
-					dispatch({ type: "LOGOUT" });
-					window.localStorage.removeItem("user");
-					router.push("/login");
-				}
-				return response;
-			};
-			const getCsrfToken = async () => {
-				const res = await fetch("/api/csrf-token");
-				const data = await res.json();
-				if (res.ok) {
-					// Set CSRF token in fetch headers
-					fetch.defaults.headers["X-CSRF-TOKEN"] =
-						data.getCsrfToken;
-				}
-			};
-
-			getCsrfToken();
-
-			// Example of setting up a custom fetch function to handle logout
-			const customFetch = async (
-				input: RequestInfo,
-				init?: RequestInit
-			) => {
-				const response = await fetch(input, init);
-				return handleResponse(response);
-			};
-		}
-
-		// Replace all fetch calls with customFetch in your app
-	}, [router]);
-
-	return (
-		<Context.Provider value={{ state, dispatch }}>
-			{children}
-		</Context.Provider>
-	);
-};
-
-export { Context, Provider };
