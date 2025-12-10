@@ -27,13 +27,23 @@ public class DocumentController {
     UserRepository userRepository;
 
     @PostMapping("/upload-documents")
-    public ResponseEntity<PostResponseDTO> uploadDocuments(@RequestParam("files") List<MultipartFile> files, Authentication authentication) {
-        String userName = authentication.getName();
-        Optional<User> user = userRepository.findByUserName(userName);
-        if(user.isEmpty()) return ResponseUtils.buildPostResponse(HttpStatus.NOT_FOUND, "User Not Found.");
+    public ResponseEntity<PostResponseDTO> uploadDocuments(@RequestParam("files") List<MultipartFile> files) {
+        String userName = "default-user";
         try {
+            Optional<User> userOptional = userRepository.findByUserName(userName);
+            final User user;
+            if(userOptional.isEmpty()) {
+                User newUser = new User();
+                newUser.setUserName(userName);
+                newUser.setPassword("default");
+                userRepository.save(newUser);
+                user = userRepository.findByUserName(userName).get();
+            } else {
+                user = userOptional.get();
+            }
+            
             List<String> fileNames = files.stream()
-                    .map(file -> documentService.saveDocument(file, userName, user.get()))
+                    .map(file -> documentService.saveDocument(file, userName, user))
                     .toList();
 
             return ResponseUtils.buildPostResponse(HttpStatus.OK, "Uploaded file for " + userName + " " + String.join(", ", fileNames));
