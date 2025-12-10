@@ -98,7 +98,6 @@ export async function uploadDocuments(
   return apiFetch<PostResponseDTO>("/auth/upload-documents", {
     method: "POST",
     body: formData,
-    token,
     signal,
   });
 }
