@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { runSearch } from "../lib/api/client";
 import { SearchPerformanceDTO } from "../lib/api/types";
-import { useAuth } from "./context/appContext";
 
 const ALGORITHMS = ["Basic", "KMP", "Rabin-Karp", "Boyer-Moore", "Fuzzy"];
 
@@ -16,7 +15,6 @@ export default function SearchControls({
   documentsCount,
   onSearchComplete,
 }: SearchControlsProps) {
-  const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [caseSensitive, setCaseSensitive] = useState(false);
   const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>([
@@ -44,7 +42,7 @@ export default function SearchControls({
     setError(null);
 
     try {
-      const results = await runSearch(searchTerm, caseSensitive, token ?? undefined);
+      const results = await runSearch(searchTerm, caseSensitive);
       
       const filteredResults = results.filter((result) =>
         selectedAlgorithms.includes(result.algorithmName)

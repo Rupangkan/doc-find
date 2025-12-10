@@ -9,7 +9,6 @@ import com.example.server.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,8 +28,8 @@ public class SearchEngineController {
     UserRepository userRepository;
 
     @GetMapping("/get-all-occurrences")
-    public ResponseEntity<GetResponseDTO<List<SearchPerformanceDTO>>> getAllOccurrences(@RequestParam("search-term") String searchTerm, @RequestParam("case-sensitive") boolean isCaseSensitive, Authentication authentication) {
-        String userName = authentication.getName();
+    public ResponseEntity<GetResponseDTO<List<SearchPerformanceDTO>>> getAllOccurrences(@RequestParam("search-term") String searchTerm, @RequestParam("case-sensitive") boolean isCaseSensitive) {
+        String userName = "default-user";
         Optional<User> user = userRepository.findByUserName(userName);
         if(user.isEmpty()) return ResponseUtils.buildGetResponse(HttpStatus.NOT_FOUND, "User Not Found.", null);
         return searchEngineService.getAllOccurrences(searchTerm, isCaseSensitive, userName);
