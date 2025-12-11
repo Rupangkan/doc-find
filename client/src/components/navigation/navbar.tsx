@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 
 const Navbar: React.FC = () => {
     return (
@@ -10,7 +9,7 @@ const Navbar: React.FC = () => {
 
             <div className="flex items-center space-x-20">
                 <div className="hidden md:flex items-end space-x-20 text-white">
-                    <Link
+                    {/* <Link
                         href="/about"
                         className="hover:text-indigo-300 text-lg"
                     >
@@ -21,7 +20,7 @@ const Navbar: React.FC = () => {
                         className="hover:text-indigo-300 text-lg"
                     >
                         Product
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
         </nav>

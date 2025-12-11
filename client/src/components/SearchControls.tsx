@@ -4,7 +4,14 @@ import { useState } from "react";
 import { runSearch } from "../lib/api/client";
 import { SearchPerformanceDTO } from "../lib/api/types";
 
-const ALGORITHMS = ["Basic", "KMP", "Rabin-Karp", "Boyer-Moore", "Fuzzy"];
+// Map server algorithm class names to friendly labels used in the UI
+const ALGORITHMS = [
+  { id: "BasicSearchAlgorithm", label: "Basic" },
+  { id: "KnuthMorrisPrattAlgorithm", label: "KMP" },
+  { id: "RabinKarpAlgorithm", label: "Rabin-Karp" },
+  { id: "BoyerMooreAlgorithm", label: "Boyer-Moore" },
+  { id: "FuzzySearchAlgorithm", label: "Fuzzy" },
+];
 
 interface SearchControlsProps {
   documentsCount: number;
@@ -17,8 +24,9 @@ export default function SearchControls({
 }: SearchControlsProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [caseSensitive, setCaseSensitive] = useState(false);
+  // store selected algorithm ids (these match what the server returns as algorithmName)
   const [selectedAlgorithms, setSelectedAlgorithms] = useState<string[]>([
-    "Basic",
+    "BasicSearchAlgorithm",
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -117,11 +125,11 @@ export default function SearchControls({
         </label>
         <div className="flex flex-wrap gap-2">
           {ALGORITHMS.map((algorithm) => {
-            const isSelected = selectedAlgorithms.includes(algorithm);
+            const isSelected = selectedAlgorithms.includes(algorithm.id);
             return (
               <button
-                key={algorithm}
-                onClick={() => toggleAlgorithm(algorithm)}
+                key={algorithm.id}
+                onClick={() => toggleAlgorithm(algorithm.id)}
                 disabled={isLoading}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   isSelected
@@ -129,10 +137,8 @@ export default function SearchControls({
                     : "bg-gray-800 bg-opacity-50 text-gray-300 border-2 border-gray-600 hover:border-gray-500"
                 } disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                {isSelected && (
-                  <span className="inline-block mr-1">✓</span>
-                )}
-                {algorithm}
+                {isSelected && <span className="inline-block mr-1">✓</span>}
+                {algorithm.label}
               </button>
             );
           })}

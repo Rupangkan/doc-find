@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { uploadDocuments } from "../lib/api";
+// import { uploadDocuments } from "../lib/api";
+import { uploadDocuments } from "../lib/api/client"
 
 const ALLOWED_EXTENSIONS = ["pdf", "txt", "doc", "docx"];
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -19,12 +20,16 @@ interface UploadedDocument {
     uploadedAt: string;
 }
 
+
 interface DocumentUploadPanelProps {
     onUploadComplete?: (documents: UploadedDocument[]) => void;
+    onNextClick?: () => void;
 }
+
 
 export default function DocumentUploadPanel({
     onUploadComplete,
+    onNextClick,
 }: DocumentUploadPanelProps) {
     const [filesWithProgress, setFilesWithProgress] = useState<FileWithProgress[]>(
         []
@@ -315,6 +320,7 @@ export default function DocumentUploadPanel({
                 </button>
             )}
 
+
             {/* Uploaded Documents Summary */}
             {uploadedDocuments.length > 0 && (
                 <div className="mt-6 p-4 rounded-lg bg-green-900 bg-opacity-30 border border-green-600">
@@ -322,9 +328,31 @@ export default function DocumentUploadPanel({
                         ✓ {uploadedDocuments.length} document{uploadedDocuments.length !== 1 ? "s" : ""} uploaded
                         successfully
                     </h3>
-                    <p className="text-green-200 text-sm">
+                    <p className="text-green-200 text-sm mb-4">
                         Your documents are now available for searching.
                     </p>
+                    {onNextClick && (
+                        <button
+                            onClick={onNextClick}
+                            className="w-full bg-violet-700 hover:bg-violet-600 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-md transition-all font-medium flex items-center justify-center gap-2"
+                        >
+                            Next: Search Documents
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </button>
+                    )}
                 </div>
             )}
         </div>

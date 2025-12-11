@@ -85,13 +85,14 @@ export async function apiFetch<T>(
   return response.text() as T;
 }
 
+
 export async function uploadDocuments(
   files: File[],
   signal?: AbortSignal
 ): Promise<PostResponseDTO> {
   const formData = new FormData();
   files.forEach((file) => {
-    formData.append("files", file);
+    formData.append("files", file, file.name);
   });
 
   return apiFetch<PostResponseDTO>("/auth/upload-documents", {

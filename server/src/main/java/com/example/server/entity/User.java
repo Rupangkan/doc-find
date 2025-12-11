@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -18,14 +19,13 @@ import java.util.Set;
 @Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String id = UUID.randomUUID().toString();
     @NotBlank
     @Column(unique = true)
     private String userName;
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+//    @NotBlank(message = "Password is required")
+//    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     Set<Document> documents = new HashSet<>();
 }
