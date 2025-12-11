@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private String id = UUID.randomUUID().toString();
     @NotBlank(message = "Document name is required")
     private String documentName;
     @Lob

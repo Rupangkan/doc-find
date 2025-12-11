@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SearchPerformanceDTO } from "../lib/api/types";
 
 interface ResultsComparisonPanelProps {
@@ -11,15 +11,31 @@ export default function ResultsComparisonPanel({
   results,
 }: ResultsComparisonPanelProps) {
   const [expandedAlgorithm, setExpandedAlgorithm] = useState<string | null>(null);
-  const [isMobileView, setIsMobileView] = useState(false);
+  // we only need the setter to respond to resize; avoid unused variable lint
+  const [, setIsMobileView] = useState(false);
+
+  // Map server-side algorithm class names to friendly labels for display
+  const ALGORITHM_LABELS: { id: string; label: string }[] = [
+    { id: "BasicSearchAlgorithm", label: "Basic" },
+    { id: "KnuthMorrisPrattAlgorithm", label: "KMP" },
+    { id: "RabinKarpAlgorithm", label: "Rabin-Karp" },
+    { id: "BoyerMooreAlgorithm", label: "Boyer-Moore" },
+    { id: "FuzzySearchAlgorithm", label: "Fuzzy" },
+  ];
+
+  const getFriendlyLabel = (algorithmName: string) => {
+    const found = ALGORITHM_LABELS.find((a) => a.id === algorithmName);
+    return found ? found.label : algorithmName;
+  };
 
   // Detect if we should show mobile view (for responsive behavior)
-  if (typeof window !== "undefined" && !isMobileView) {
-    const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768);
-    };
+  useEffect(() => {
+    const handleResize = () => setIsMobileView(window.innerWidth < 768);
+    // run once to set initial
+    handleResize();
     window.addEventListener("resize", handleResize);
-  }
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   if (results.length === 0) {
     return (
@@ -99,7 +115,7 @@ export default function ResultsComparisonPanel({
         {/* Match Status Tile */}
         <div className="p-4 bg-gradient-to-br from-blue-900 to-blue-800 bg-opacity-50 rounded-lg border border-blue-700 shadow-lg">
           <p className="text-blue-300 text-xs uppercase tracking-wider font-semibold mb-2">
-            Match Status
+            Match Status in Documents
           </p>
           <div className="flex items-center gap-2">
             <div
@@ -179,7 +195,7 @@ export default function ResultsComparisonPanel({
                           isFastest ? "text-violet-300" : "text-white"
                         }`}
                       >
-                        {result.algorithmName}
+                        {getFriendlyLabel(result.algorithmName)}
                       </span>
                       {isFastest && (
                         <span className="ml-2 inline-block px-2 py-1 text-xs font-bold bg-violet-600 text-white rounded">
@@ -251,8 +267,8 @@ export default function ResultsComparisonPanel({
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <h4 className="font-semibold text-white">
-                      {result.algorithmName}
-                    </h4>
+                        {getFriendlyLabel(result.algorithmName)}
+                      </h4>
                     {isFastest && (
                       <span className="inline-block mt-1 px-2 py-1 text-xs font-bold bg-violet-600 text-white rounded">
                         FASTEST
