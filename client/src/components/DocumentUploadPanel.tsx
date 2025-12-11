@@ -108,16 +108,15 @@ export default function DocumentUploadPanel({
     };
 
     const handleUpload = async () => {
-        const pendingFiles = filesWithProgress
-            .filter((f) => f.status === "pending")
-            .map((f) => f.file);
+        const uploadingItems = filesWithProgress.filter((f) => f.status === "pending");
+        const pendingFiles = uploadingItems.map((f) => f.file);
 
         if (pendingFiles.length === 0) {
             setErrorMessage("No files to upload");
             return;
         }
 
-        // Mark all files as uploading
+        // Mark selected files as uploading
         setFilesWithProgress((prevFiles) =>
             prevFiles.map((f) =>
                 f.status === "pending" ? { ...f, status: "uploading" } : f
@@ -127,20 +126,20 @@ export default function DocumentUploadPanel({
         try {
             await uploadDocuments(pendingFiles);
 
-            // Mark all uploading files as success
-            const newUploadedDocs: UploadedDocument[] = [];
+            // Build new uploaded docs from the items we captured before the upload
+            const newUploadedDocs: UploadedDocument[] = uploadingItems.map((f) => ({
+                name: f.file.name,
+                size: f.file.size,
+                uploadedAt: new Date().toISOString(),
+            }));
+
+            // Mark those files as success in the UI
             setFilesWithProgress((prevFiles) =>
-                prevFiles.map((f) => {
-                    if (f.status === "uploading") {
-                        newUploadedDocs.push({
-                            name: f.file.name,
-                            size: f.file.size,
-                            uploadedAt: new Date().toISOString(),
-                        });
-                        return { ...f, status: "success", progress: 100 };
-                    }
-                    return f;
-                })
+                prevFiles.map((f) =>
+                    uploadingItems.some((u) => u.file === f.file)
+                        ? { ...f, status: "success", progress: 100 }
+                        : f
+                )
             );
 
             setUploadedDocuments((prev) => [...prev, ...newUploadedDocs]);
@@ -161,10 +160,10 @@ export default function DocumentUploadPanel({
 
             setErrorMessage(errorMsg);
 
-            // Mark all uploading files as error
+            // Mark selected files as error
             setFilesWithProgress((prevFiles) =>
                 prevFiles.map((f) =>
-                    f.status === "uploading"
+                    uploadingItems.some((u) => u.file === f.file)
                         ? { ...f, status: "error", error: errorMsg }
                         : f
                 )
