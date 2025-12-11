@@ -6,7 +6,7 @@ import DocumentUploadPanel from "../../components/DocumentUploadPanel";
 import SearchControls from "../../components/SearchControls";
 import ResultsComparisonPanel from "../../components/ResultsComparisonPanel";
 import { SearchPerformanceDTO } from "../../lib/api/types";
-import { fetchDocuments } from "../../lib/api/client";
+import { fetchDocuments, deleteDocuments } from "../../lib/api/client";
 
 interface UploadedDocument {
     name: string;
@@ -26,7 +26,8 @@ export default function DocumentSearchFlow() {
     const [isVerifyingDocuments, setIsVerifyingDocuments] = useState(false);
     const [documentError, setDocumentError] = useState<string | null>(null);
 
-    const steps = [1, 2, 3, 4];
+    // We only need 3 steps now: Upload -> Search -> Results
+    const steps = [1, 2, 3];
 
     // Verify documents from server when transitioning to step 2
     const verifyServerDocuments = async () => {
@@ -71,6 +72,20 @@ export default function DocumentSearchFlow() {
         setCurrentStep(2);
         // Verify documents from server when transitioning to step 2
         await verifyServerDocuments();
+    };
+
+    const handleDeleteAllDocuments = async () => {
+        const ok = typeof window !== "undefined" ? window.confirm("Delete all uploaded documents and start over? This cannot be undone.") : true;
+        if (!ok) return;
+        try {
+            await deleteDocuments();
+            setUploadedDocuments([]);
+            setSearchResults([]);
+            setCurrentStep(1);
+        } catch (err) {
+            console.error("Failed to delete documents:", err);
+            alert("Failed to delete documents. Please try again.");
+        }
     };
 
     const handleSearchComplete = (results: SearchPerformanceDTO[]) => {
@@ -136,13 +151,13 @@ export default function DocumentSearchFlow() {
 
             {/* Step Content */}
             {currentStep === 1 && (
-                <div className="w-full max-w-xl mx-auto px-4">
-                    <div className="p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700">
-                        <h2 className="text-2xl text-white font-semibold mb-2">
+                <div className="w-full max-w-3xl mx-auto px-4">
+                    <div className="p-8 md:p-12 rounded-xl shadow-lg backdrop-filter backdrop-blur-md bg-opacity-60 border border-gray-700">
+                        <h2 className="text-3xl md:text-4xl text-white font-semibold mb-3">
                             Upload Documents
                         </h2>
-                        <p className="text-gray-300 text-sm mb-6">
-                            Add PDF, TXT, DOC, or DOCX files to get started
+                        <p className="text-gray-300 text-base md:text-lg mb-6">
+                            Add PDF, TXT, DOC, or DOCX files to get started. Uploaded documents are used for all searches.
                         </p>
 
                         <DocumentUploadPanel 
@@ -155,15 +170,15 @@ export default function DocumentSearchFlow() {
 
 
             {currentStep === 2 && (
-                <div className="w-full max-w-xl mx-auto px-4">
-                    <div className="p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700">
-                        <h2 className="text-2xl text-white font-semibold mb-2">
+                <div className="w-full max-w-3xl mx-auto px-4">
+                    <div className="p-8 md:p-12 rounded-xl shadow-lg backdrop-filter backdrop-blur-md bg-opacity-60 border border-gray-700">
+                        <h2 className="text-3xl md:text-4xl text-white font-semibold mb-3">
                             Search Documents
                         </h2>
-                        <p className="text-gray-300 text-sm mb-6">
+                        <p className="text-gray-300 text-base md:text-lg mb-6">
                             {isVerifyingDocuments ? (
                                 <span className="flex items-center">
-                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
@@ -198,8 +213,8 @@ export default function DocumentSearchFlow() {
 
             {currentStep === 3 && (
                 <div className="w-full max-w-5xl mx-auto px-4">
-                    <div className="p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700">
-                        <h2 className="text-2xl text-white font-semibold mb-4">
+                    <div className="p-6 md:p-8 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700">
+                        <h2 className="text-2xl md:text-3xl text-white font-semibold mb-4">
                             Results Comparison
                         </h2>
                         <ResultsComparisonPanel results={searchResults} />
@@ -212,10 +227,10 @@ export default function DocumentSearchFlow() {
                                     Back to Search
                                 </button>
                                 <button
-                                    onClick={() => setCurrentStep(4)}
-                                    className="flex-1 px-6 py-2 bg-violet-700 hover:bg-violet-600 text-white rounded-lg transition-colors font-medium"
+                                    onClick={handleDeleteAllDocuments}
+                                    className="flex-1 px-6 py-2 bg-red-700 hover:bg-red-600 text-white rounded-lg transition-colors font-medium"
                                 >
-                                    Continue to Export
+                                    Delete All Documents & Restart
                                 </button>
                             </div>
                         )}
@@ -223,16 +238,7 @@ export default function DocumentSearchFlow() {
                 </div>
             )}
 
-            {currentStep === 4 && (
-                <div className="w-full max-w-xl mx-auto px-4">
-                    <div className="p-6 rounded-lg shadow-md backdrop-filter backdrop-blur-md bg-opacity-50 border border-gray-700 text-center">
-                        <h2 className="text-2xl text-white font-semibold mb-4">
-                            Step 4: Export
-                        </h2>
-                        <p className="text-gray-300">Export content coming soon...</p>
-                    </div>
-                </div>
-            )}
+            {/* Step 4 removed — replaced by a delete/restart action in step 3 */}
         </div>
     );
 }

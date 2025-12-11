@@ -115,7 +115,7 @@ export default function ResultsComparisonPanel({
         {/* Match Status Tile */}
         <div className="p-4 bg-gradient-to-br from-blue-900 to-blue-800 bg-opacity-50 rounded-lg border border-blue-700 shadow-lg">
           <p className="text-blue-300 text-xs uppercase tracking-wider font-semibold mb-2">
-            Match Status
+            Match Status in Documents
           </p>
           <div className="flex items-center gap-2">
             <div

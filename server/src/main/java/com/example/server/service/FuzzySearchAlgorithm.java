@@ -18,11 +18,22 @@ public class FuzzySearchAlgorithm implements SearchAlgorithm {
 
     private SearchResultDTO getFuzzySearchResultDTO(String searchTerm, Document document, Boolean isCaseSensitive) {
         String content = document.getContent();
-        int patternLength = searchTerm.length();
-        int contentLength = content.length();
-
         SearchResultDTO searchResult = new SearchResultDTO(document.getDocumentName(), new ArrayList<>());
 
+        if (searchTerm == null || searchTerm.isEmpty() || content == null || content.isEmpty()) {
+            return searchResult;
+        }
+
+        // For now implement a simple substring-based search for fuzzy as well.
+        // A true fuzzy (approximate) search can be implemented later (Levenshtein or n-gram matching).
+        String haystack = isCaseSensitive != null && isCaseSensitive ? content : content.toLowerCase();
+        String needle = isCaseSensitive != null && isCaseSensitive ? searchTerm : searchTerm.toLowerCase();
+
+        int index = haystack.indexOf(needle, 0);
+        while (index >= 0) {
+            searchResult.addOccurrences(index);
+            index = haystack.indexOf(needle, index + 1);
+        }
 
         return searchResult;
     }
