@@ -24,18 +24,52 @@ public class FuzzySearchAlgorithm implements SearchAlgorithm {
             return searchResult;
         }
 
-        // For now implement a simple substring-based search for fuzzy as well.
-        // A true fuzzy (approximate) search can be implemented later (Levenshtein or n-gram matching).
         String haystack = isCaseSensitive != null && isCaseSensitive ? content : content.toLowerCase();
         String needle = isCaseSensitive != null && isCaseSensitive ? searchTerm : searchTerm.toLowerCase();
 
-        int index = haystack.indexOf(needle, 0);
-        while (index >= 0) {
-            searchResult.addOccurrences(index);
-            index = haystack.indexOf(needle, index + 1);
+        int n = haystack.length();
+        int m = needle.length();
+        if (m > n) return searchResult;
+
+        // threshold for fuzzy match: allow up to maxDistance edits
+        int maxDistance = Math.max(1, m / 4); // heuristic: 25% of pattern length, at least 1
+
+        for (int i = 0; i <= n - m; i++) {
+            String window = haystack.substring(i, i + m);
+            if (window.equals(needle)) {
+                searchResult.addOccurrences(i);
+            } else {
+                int dist = levenshteinDistance(window, needle, maxDistance);
+                if (dist <= maxDistance) {
+                    searchResult.addOccurrences(i);
+                }
+            }
         }
 
         return searchResult;
+    }
+
+    // compute Levenshtein distance with early exit when exceeding maxDistance
+    private int levenshteinDistance(String a, String b, int maxDistance) {
+        int n = a.length();
+        int m = b.length();
+        int[] prev = new int[m + 1];
+        int[] curr = new int[m + 1];
+
+        for (int j = 0; j <= m; j++) prev[j] = j;
+
+        for (int i = 1; i <= n; i++) {
+            curr[0] = i;
+            int minRow = curr[0];
+            for (int j = 1; j <= m; j++) {
+                int cost = a.charAt(i - 1) == b.charAt(j - 1) ? 0 : 1;
+                curr[j] = Math.min(Math.min(curr[j - 1] + 1, prev[j] + 1), prev[j - 1] + cost);
+                minRow = Math.min(minRow, curr[j]);
+            }
+            if (minRow > maxDistance) return maxDistance + 1; // early exit
+            int[] tmp = prev; prev = curr; curr = tmp;
+        }
+        return prev[m];
     }
 
     @Override

@@ -26,10 +26,33 @@ public class BoyerMooreAlgorithm implements SearchAlgorithm {
         String haystack = isCaseSensitive != null && isCaseSensitive ? content : content.toLowerCase();
         String needle = isCaseSensitive != null && isCaseSensitive ? searchTerm : searchTerm.toLowerCase();
 
-        int index = haystack.indexOf(needle, 0);
-        while (index >= 0) {
-            searchResult.addOccurrences(index);
-            index = haystack.indexOf(needle, index + 1);
+        int n = haystack.length();
+        int m = needle.length();
+        if (m > n) return searchResult;
+
+        // Build shift table (Horspool variant of Boyer-Moore)
+        final int DEFAULT_SHIFT = m;
+        java.util.Map<Character, Integer> shift = new java.util.HashMap<>();
+        for (int i = 0; i < m - 1; i++) {
+            shift.put(needle.charAt(i), m - 1 - i);
+        }
+
+        int i = 0;
+        while (i <= n - m) {
+            int j = m - 1;
+            while (j >= 0 && needle.charAt(j) == haystack.charAt(i + j)) {
+                j--;
+            }
+            if (j < 0) {
+                // match at position i
+                searchResult.addOccurrences(i);
+                // shift by full length to find next non-overlapping or overlapping match
+                i += 1; // allow overlapping matches
+            } else {
+                char c = haystack.charAt(i + m - 1);
+                int s = shift.getOrDefault(c, DEFAULT_SHIFT);
+                i += s;
+            }
         }
 
         return searchResult;
