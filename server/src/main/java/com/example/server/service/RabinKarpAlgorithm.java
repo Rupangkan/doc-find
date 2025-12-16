@@ -27,10 +27,38 @@ public class RabinKarpAlgorithm implements SearchAlgorithm {
         String haystack = isCaseSensitive != null && isCaseSensitive ? content : content.toLowerCase();
         String needle = isCaseSensitive != null && isCaseSensitive ? searchTerm : searchTerm.toLowerCase();
 
-        int index = haystack.indexOf(needle, 0);
-        while (index >= 0) {
-            searchResult.addOccurrences(index);
-            index = haystack.indexOf(needle, index + 1);
+        int n = haystack.length();
+        int m = needle.length();
+        if (m > n) return searchResult;
+
+        final long base = 256;
+        final long mod = 1_000_000_007L;
+
+        // precompute base^(m-1) % mod
+        long power = 1;
+        for (int i = 0; i < m - 1; i++) {
+            power = (power * base) % mod;
+        }
+
+        long needleHash = 0;
+        long windowHash = 0;
+        for (int i = 0; i < m; i++) {
+            needleHash = (needleHash * base + needle.charAt(i)) % mod;
+            windowHash = (windowHash * base + haystack.charAt(i)) % mod;
+        }
+
+        for (int i = 0; i <= n - m; i++) {
+            if (needleHash == windowHash) {
+                // possible match, verify to avoid false positive
+                if (haystack.regionMatches(i, needle, 0, m)) {
+                    searchResult.addOccurrences(i);
+                }
+            }
+            if (i < n - m) {
+                long left = (haystack.charAt(i) * power) % mod;
+                windowHash = (windowHash + mod - left) % mod;
+                windowHash = (windowHash * base + haystack.charAt(i + m)) % mod;
+            }
         }
 
         return searchResult;
